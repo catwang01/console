@@ -41,6 +41,9 @@ function parseParam(name: string, defaultValue: string | null | undefined): stri
 export default function App() {
   const [code, setCode] = useState("");
   const autoRun = parseParam('autoRun', 'true') === 'true';
+  const options = {
+    domReadOnly: parseParam('readonly', 'false') === 'true',
+  }
 
   const handleOnChange = (code?: string) => {
     setCode(code || "");
@@ -64,5 +67,5 @@ export default function App() {
     }
   }, []);
 
-  return <Console defaultValue={code} autoRun={autoRun} onChange={handleOnChange} />;
+  return <Console defaultValue={code} {...options} autoRun={autoRun} onChange={handleOnChange} />;
 }
