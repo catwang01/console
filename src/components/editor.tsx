@@ -12,9 +12,10 @@ import { darkTheme, options } from "../libs/editor";
 export type EditorProps = {
   defaultValue?: string;
   onChange: (code?: string) => void;
+  domReadOnly: boolean;
 };
 
-export default function Editor({ defaultValue, onChange }: EditorProps) {
+export default function Editor({ defaultValue, onChange, domReadOnly }: EditorProps) {
   const monaco = useMonaco();
   const [state, dispatch] = useConsole();
 
@@ -59,7 +60,7 @@ export default function Editor({ defaultValue, onChange }: EditorProps) {
     <CodeEditor
       height="100%"
       theme="vs-dark"
-      options={options}
+      options={{...options, domReadOnly, readOnly: domReadOnly}}
       value={defaultValue}
       language={state.language}
       onChange={handleOnChange}
