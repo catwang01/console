@@ -52,18 +52,18 @@ export default function App() {
   };
 
   useEffect(() => {
+    const code = parseParam('code', '');
+    if (code) 
+    {
+      setCode(decodeURIComponent(code) || "");
+      return;
+    }
+
     const compressed = localStorage.getItem("console:code");
     if (compressed) {
       const code = decompress(compressed);
       setCode(code || "");
-    }
-    
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const code = params.get('code');
-    if (code) 
-    {
-      setCode(decodeURIComponent(code) || "");
+      return;
     }
   }, []);
 
