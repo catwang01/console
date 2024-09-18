@@ -9,7 +9,7 @@ import Toolbar from "./components/toolbar";
 import Runner from "./components/runner";
 import styles from "./app.module.css";
 
-export type ConsoleProps = EditorProps & {};
+export type ConsoleProps = EditorProps & { autoRun: boolean; };
 
 export const Console = (props: ConsoleProps) => {
   return (
@@ -26,13 +26,21 @@ export const Console = (props: ConsoleProps) => {
         </PanelGroup>
       </div>
       <Toolbar />
-      <Runner />
+      <Runner autoRun={props.autoRun} />
     </ConsoleProvider>
   );
 };
 
+function parseParam(name: string, defaultValue: string | null | undefined): string | null | undefined
+{
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    return params.get(name) || defaultValue;
+}
+
 export default function App() {
   const [code, setCode] = useState("");
+  const autoRun = parseParam('autoRun', 'true') === 'true';
 
   const handleOnChange = (code?: string) => {
     setCode(code || "");
@@ -46,7 +54,15 @@ export default function App() {
       const code = decompress(compressed);
       setCode(code || "");
     }
+    
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const code = params.get('code');
+    if (code) 
+    {
+      setCode(decodeURIComponent(code) || "");
+    }
   }, []);
 
-  return <Console defaultValue={code} onChange={handleOnChange} />;
+  return <Console defaultValue={code} autoRun={autoRun} onChange={handleOnChange} />;
 }
