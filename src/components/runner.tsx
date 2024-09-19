@@ -5,7 +5,11 @@ import { useConsole } from "../context/console";
 import consoleStub, { promiseStub, proxyStub } from "../libs/log";
 import { Languages } from "../libs/constants";
 
-export default function Runner() {
+export type RunnerProps = {
+  autoRun?: boolean;
+}
+
+export default function Runner(props: RunnerProps) {
   const monaco = useMonaco();
   const [state, dispatch] = useConsole();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -90,6 +94,16 @@ export default function Runner() {
     },
     [iframeRef, dispatch]
   );
+
+  useEffect(() => {
+    if (!props.autoRun) {
+      return;
+    }
+    setTimeout(
+      () => dispatch({ type: "RUN_CODE" }),
+      1000
+    )
+  }, []);
 
   useEffect(() => {
     if (!state.isRunning) {
